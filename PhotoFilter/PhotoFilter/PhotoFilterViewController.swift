@@ -3,6 +3,10 @@ import CoreImage
 import Photos
 
 class PhotoFilterViewController: UIViewController {
+    
+    // Properties
+    private let context = CIContext(options: nil)
+    private let filter = CIFilter(name: "CIColorControls")! // Can Crash!
 
 	@IBOutlet var brightnessSlider: UISlider!
 	@IBOutlet var contrastSlider: UISlider!
