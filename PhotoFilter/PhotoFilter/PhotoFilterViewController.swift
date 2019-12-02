@@ -32,7 +32,23 @@ class PhotoFilterViewController: UIViewController {
 	@IBAction func choosePhotoButtonPressed(_ sender: Any) {
 		// TODO: show the photo picker so we can choose on-device photos
 		// UIImagePickerController + Delegate
+        presentImagePicker()
 	}
+    
+    private func presentImagePicker() {
+        
+        guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { print("Error: photo librari is not available")
+            return
+        }
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        
+        present(imagePicker, animated: true, completion: nil)
+        
+        
+    }
 	
 	@IBAction func savePhotoButtonPressed(_ sender: UIButton) {
 
@@ -67,8 +83,8 @@ class PhotoFilterViewController: UIViewController {
         // Set the filter values
         filter.setValue(ciImage, forKey: "inputImage")
         filter.setValue(saturationSlider.value, forKey: "inputSaturation")
-        filter.setValue(brightnessSlider, forKey: "inputBrightness")
-        filter.setValue(contrastSlider, forKey: "inputContrast")
+        filter.setValue(brightnessSlider.value, forKey: "inputBrightness")
+        filter.setValue(contrastSlider.value, forKey: "inputContrast")
         
         guard let outputCIImage = filter.outputImage else { return image }
         
@@ -88,5 +104,25 @@ class PhotoFilterViewController: UIViewController {
         }
     }
     
+}
+
+extension PhotoFilterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        // set the image and update the display
+        
+        // TODO: Play with edited image
+        
+        if let image = info[.originalImage] as? UIImage {
+            originalImage = image
+        }
+        
+        picker.dismiss(animated: true, completion: nil)
+    }
 }
 
